@@ -8,54 +8,55 @@ function App() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [activeCard, setActiveCard] = useState(null)
   const [modalFeature, setModalFeature] = useState(null)
+  const [scrollY, setScrollY] = useState(0)
 
   const features = [
     {
       id: 'f1',
       icon: '🏠',
-      title: 'Buyer & Seller Lead Generation',
-      summary: 'AI finds motivated buyers and sellers in your target market 24/7',
+      title: 'Intelligent Lead Generation',
+      summary: 'Never miss a potential client—AI discovers and engages motivated buyers and sellers 24/7',
       details: [
-        'Automated prospecting from Zillow, Realtor.com, and social media',
-        'Identifies FSBOs, expired listings, and pre-foreclosures',
-        'Geo-targeted campaigns for your farm areas',
-        'Instant response to new listing inquiries and open house sign-ups'
+        'Multi-channel prospecting: Zillow, Realtor.com, Facebook, Instagram, and more',
+        'Smart targeting: FSBOs, expired listings, pre-foreclosures, and high-intent prospects',
+        'Hyper-local campaigns optimized for your farm areas and neighborhoods',
+        'Lightning-fast response to inquiries—capture leads before competitors do'
       ]
     },
     {
       id: 'f2',
       icon: '💬',
-      title: 'Smart Client Conversations',
-      summary: 'Engages prospects with personalized responses about listings and market info',
+      title: 'AI-Powered Conversations',
+      summary: 'Engage every prospect with human-like, personalized responses that build trust and book appointments',
       details: [
-        'Answers property questions and schedules showings instantly',
-        'Provides neighborhood insights and school information',
-        'Sends automated market updates and new listing alerts',
-        'Seamlessly transfers hot leads to you for personal follow-up'
+        'Instant answers to property questions, pricing, and showing availability',
+        'Comprehensive neighborhood data: schools, amenities, market trends, and more',
+        'Proactive outreach with market updates and perfectly-matched new listings',
+        'Smart handoff to you when leads are ready to convert—no opportunity wasted'
       ]
     },
     {
       id: 'f3',
       icon: '🔥',
-      title: 'Lead Qualification & Nurturing',
-      summary: 'Automatically identifies serious buyers and motivated sellers',
+      title: 'Smart Qualification & Nurturing',
+      summary: 'Focus on ready-to-close clients while AI nurtures everyone else until they\'re ready',
       details: [
-        'Pre-qualifies buyers based on budget, timeline, and preferences',
-        'Scores seller motivation and property readiness',
-        'Drip campaigns for long-term lead nurturing',
-        'Syncs with your CRM and MLS for seamless workflow'
+        'Advanced buyer qualification: budget verification, timeline assessment, and preference matching',
+        'Seller readiness scoring based on motivation, property condition, and market timing',
+        'Intelligent drip campaigns that adapt to each lead\'s behavior and engagement',
+        'Seamless CRM and MLS integration—all your data in one place, always up-to-date'
       ]
     },
     {
       id: 'f4',
       icon: '✅',
-      title: 'Transaction Management',
-      summary: 'Automates follow-ups and keeps deals moving to closing',
+      title: 'Automated Transaction Management',
+      summary: 'Keep every deal on track from contract to close with zero manual follow-up',
       details: [
-        'Automated appointment reminders and showing confirmations',
-        'Follow-up sequences after showings and open houses',
-        'Transaction milestone tracking and client updates',
-        'Post-closing referral requests and review generation'
+        'Smart reminders for appointments, inspections, and critical deadlines',
+        'Automated post-showing follow-ups that keep you top-of-mind',
+        'Real-time transaction tracking with automatic client status updates',
+        'Post-closing automation: referral requests, reviews, and anniversary touchpoints'
       ]
     }
   ]
@@ -64,8 +65,15 @@ function App() {
     const handleMouseMove = (e) => {
       setMousePos({ x: e.clientX, y: e.clientY })
     }
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+    }
     window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   useEffect(() => {
@@ -110,9 +118,9 @@ function App() {
 
   return (
     <div className="app">
-      <div className="bg-gradient-orb orb-1"></div>
-      <div className="bg-gradient-orb orb-2"></div>
-      <div className="bg-gradient-orb orb-3"></div>
+      <div className="bg-gradient-orb orb-1" style={{ transform: `translate(0, ${scrollY * 0.3}px)` }}></div>
+      <div className="bg-gradient-orb orb-2" style={{ transform: `translate(0, ${scrollY * 0.2}px)` }}></div>
+      <div className="bg-gradient-orb orb-3" style={{ transform: `translate(-50%, calc(-50% + ${scrollY * 0.15}px))` }}></div>
       <div className="bg-grid"></div>
       <div className="cursor-glow" style={{ left: mousePos.x, top: mousePos.y }} />
       
@@ -125,12 +133,12 @@ function App() {
 
       <main>
         <section className="hero">
-          <div className="hero-badge">✨ AI for Real Estate Agents</div>
+          <div className="hero-badge">✨ Coming Soon: AI for Real Estate Agents</div>
           <h1 className="hero-title">
-            Your AI Assistant That Generates Leads & Closes Deals While You Sleep
+            The AI Assistant That Will 3x Your Closings While You Sleep
           </h1>
           <p className="hero-subtitle">
-            Automate prospecting, client follow-ups, and transaction management—so you can focus on showings and closings
+            Join the waitlist for CoAgent Suite—the AI platform that automates lead generation, client conversations, and follow-ups. Be among the first to transform your real estate business.
           </p>
           <form onSubmit={handleSubmit} className="hero-form">
             <input
@@ -147,7 +155,7 @@ function App() {
                   <span className="spinner"></span>
                   Joining...
                 </>
-              ) : 'Get Early Access'}
+              ) : 'Join the Waitlist'}
             </button>
           </form>
           {message && <p className="success-msg">{message}</p>}
@@ -168,7 +176,7 @@ function App() {
         </section>
 
         <section className="features">
-          <h2 className="section-title">Your Complete Real Estate AI System</h2>
+          <h2 className="section-title">What You'll Get When We Launch</h2>
           <div className="features-grid">
             {features.map((feature) => (
               <div 
@@ -189,38 +197,38 @@ function App() {
         </section>
 
         <section className="testimonials">
-          <h2 className="section-title">Trusted by Top-Producing Agents</h2>
+          <h2 className="section-title">What Agents Are Saying</h2>
           <div className="testimonials-grid">
             <div className="testimonial-card">
               <div className="stars">⭐⭐⭐⭐⭐</div>
-              <p className="testimonial-text">"CoAgent Suite helped me close 15 more deals this quarter. It's like having a full-time assistant that never sleeps."</p>
+              <p className="testimonial-text">"I've been testing the early version for 3 months and already closed 6 extra deals. Can't wait for the full launch—this is going to change everything for agents."</p>
               <div className="testimonial-author">
                 <div className="author-avatar">JM</div>
                 <div>
                   <div className="author-name">Jessica Martinez</div>
-                  <div className="author-title">Top Producer, Miami</div>
+                  <div className="author-title">Real Estate Agent, Miami, FL</div>
                 </div>
               </div>
             </div>
             <div className="testimonial-card">
               <div className="stars">⭐⭐⭐⭐⭐</div>
-              <p className="testimonial-text">"I was skeptical at first, but the AI actually sounds human. My response time went from hours to seconds."</p>
+              <p className="testimonial-text">"Finally, an AI that actually understands real estate. The preview already responds faster than I ever could. This is the future of our industry."</p>
               <div className="testimonial-author">
                 <div className="author-avatar">DK</div>
                 <div>
                   <div className="author-name">David Kim</div>
-                  <div className="author-title">Luxury Agent, LA</div>
+                  <div className="author-title">Real Estate Agent, Los Angeles, CA</div>
                 </div>
               </div>
             </div>
             <div className="testimonial-card">
               <div className="stars">⭐⭐⭐⭐⭐</div>
-              <p className="testimonial-text">"Finally have time for my family while my business grows. CoAgent Suite handles all the tedious follow-ups."</p>
+              <p className="testimonial-text">"I signed up for early access and got a sneak peek. Even in preview, it's saving me 10+ hours a week. Get on the waitlist now—you won't regret it."</p>
               <div className="testimonial-author">
                 <div className="author-avatar">SR</div>
                 <div>
                   <div className="author-name">Sarah Rodriguez</div>
-                  <div className="author-title">Team Leader, Austin</div>
+                  <div className="author-title">Real Estate Agent, Austin, TX</div>
                 </div>
               </div>
             </div>
@@ -231,36 +239,36 @@ function App() {
           <h2 className="section-title">Frequently Asked Questions</h2>
           <div className="faq-grid">
             <div className="faq-item">
-              <h3>💡 Does it integrate with my CRM?</h3>
-              <p>Yes! CoAgent Suite integrates with all major real estate CRMs including Follow Up Boss, LionDesk, and kvCORE.</p>
+              <h3>💡 When will CoAgent Suite launch?</h3>
+              <p>We're currently in private beta and planning to launch in Q2 2024. Waitlist members will get priority access and exclusive early-bird pricing.</p>
             </div>
             <div className="faq-item">
-              <h3>🤖 Will clients know it's AI?</h3>
-              <p>Only if you want them to. Our AI sounds natural and can seamlessly hand off to you when needed.</p>
+              <h3>🤖 What makes this different from other AI tools?</h3>
+              <p>CoAgent Suite is built specifically for real estate agents. It understands MLS data, property details, market trends, and the unique sales cycle of real estate—not just generic chatbot responses.</p>
             </div>
             <div className="faq-item">
-              <h3>⚡ How fast can I get started?</h3>
-              <p>Setup takes less than 15 minutes. We'll import your listings and you're ready to go.</p>
+              <h3>⚡ Is there a cost to join the waitlist?</h3>
+              <p>No! Joining the waitlist is completely free. You'll get early access, exclusive updates, and special launch pricing when we go live.</p>
             </div>
             <div className="faq-item">
-              <h3>💰 What's the pricing?</h3>
-              <p>Plans start at $197/month. Most agents make that back from just one extra closing per year.</p>
+              <h3>💰 What will the pricing be?</h3>
+              <p>We're finalizing pricing, but expect plans starting around $197/month. Waitlist members will receive 50% off for the first 6 months as a thank you for early support.</p>
             </div>
             <div className="faq-item">
-              <h3>📱 Does it work with text messages?</h3>
-              <p>Absolutely! CoAgent Suite handles SMS, email, social media DMs, and website chat - all from one platform.</p>
+              <h3>📱 Will it work with my CRM and tools?</h3>
+              <p>Yes! We're building integrations with all major real estate CRMs (Follow Up Boss, LionDesk, kvCORE), MLS systems, and communication platforms. Let us know your tools when you sign up.</p>
             </div>
             <div className="faq-item">
-              <h3>🎯 Can I customize the responses?</h3>
-              <p>Yes! You can train the AI with your own scripts, tone, and brand voice. It learns from your style.</p>
+              <h3>🎯 Can I help shape the product?</h3>
+              <p>Absolutely! Waitlist members will be invited to provide feedback and feature requests. We're building this for agents, with agents. Your input matters.</p>
             </div>
             <div className="faq-item">
-              <h3>🔒 Is my data secure?</h3>
-              <p>Bank-level encryption and SOC 2 compliant. Your client data is protected with enterprise security.</p>
+              <h3>🔒 What happens to my email?</h3>
+              <p>We'll only use your email to send you launch updates and early access information. No spam, no selling your data. You can unsubscribe anytime.</p>
             </div>
             <div className="faq-item">
-              <h3>👥 Can my team use it?</h3>
-              <p>Yes! Team plans available with shared inbox, lead routing, and performance analytics for each agent.</p>
+              <h3>👥 Can I refer other agents?</h3>
+              <p>Yes! We'll send you a referral link after you join. For every agent you refer, you'll move up in the waitlist and unlock bonus features at launch.</p>
             </div>
           </div>
         </section>
@@ -288,13 +296,13 @@ function App() {
         )}
 
         <section className="cta">
-          <div className="cta-badge">🔥 Limited Time: First 100 Agents Get 50% Off</div>
-          <h2 className="cta-title">Ready to 3x Your Closings?</h2>
-          <p className="cta-subtitle">Join top-producing agents who never miss a lead or follow-up</p>
+          <div className="cta-badge">🔥 Limited Spots: First 500 on Waitlist Get 50% Off for Life</div>
+          <h2 className="cta-title">Don't Miss Out on Early Access</h2>
+          <p className="cta-subtitle">Join the waitlist now and be among the first agents to experience the future of real estate automation</p>
           <button onClick={scrollToForm} className="cta-btn">
-            Start Free Trial
+            Reserve Your Spot—It's Free
           </button>
-          <p className="cta-note">No credit card required • 14-day free trial • Cancel anytime</p>
+          <p className="cta-note">No credit card required • Priority access • Exclusive launch pricing • Cancel anytime</p>
         </section>
       </main>
 
@@ -305,12 +313,12 @@ function App() {
               <span className="logo-text">CoAgent Suite</span>
               <span className="logo-pulse"></span>
             </div>
-            <p className="footer-tagline">AI-powered automation for real estate agents</p>
+            <p className="footer-tagline">Empowering real estate professionals with intelligent automation</p>
           </div>
           <div className="footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#contact">Contact</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+            <a href="mailto:contact@coagentsuite.com">Contact</a>
           </div>
         </div>
         <div className="footer-bottom">

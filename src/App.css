@@ -235,7 +235,7 @@ main {
   color: #fff;
   font-size: 1rem;
   outline: none;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hero-input::placeholder {
@@ -244,47 +244,45 @@ main {
 
 .hero-input:focus {
   background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.6);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
-  transform: scale(1.02);
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2), 0 8px 24px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
 }
 
 .hero-btn {
   padding: 1rem 2rem;
-  background: #fff;
-  color: #0a0a0a;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
   border: none;
   border-radius: 50px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 .hero-btn::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.1);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
 }
 
 .hero-btn:hover::before {
-  width: 300px;
-  height: 300px;
+  left: 100%;
 }
 
 .hero-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
 }
 
 .hero-btn:disabled {
@@ -330,11 +328,14 @@ main {
 .stat {
   text-align: center;
   cursor: pointer;
-  transition: transform 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1rem;
+  border-radius: 12px;
 }
 
 .stat:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.03);
 }
 
 .stat-value {
@@ -397,11 +398,12 @@ main {
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 20px;
   padding: 2.5rem 2rem;
-  transition: all 0.4s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeIn 0.8s ease-out;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  backdrop-filter: blur(10px);
 }
 
 .feature-card::before {
@@ -420,9 +422,10 @@ main {
 }
 
 .feature-card:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.2);
-  transform: translateY(-8px) scale(1.02);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(102, 126, 234, 0.5);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2), 0 0 0 1px rgba(102, 126, 234, 0.3) inset;
 }
 
 .feature-card:focus-visible {
@@ -507,15 +510,16 @@ main {
 }
 
 .modal-content {
-  background: linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(10,10,10,0.98) 100%);
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 24px;
   padding: 3rem;
   max-width: 600px;
   width: 100%;
   position: relative;
-  animation: slideUp 0.4s ease-out;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(102, 126, 234, 0.2) inset;
+  backdrop-filter: blur(20px);
 }
 
 .modal-close {
@@ -613,7 +617,7 @@ main {
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(30px) scale(0.95);
+    transform: translateY(40px) scale(0.9);
   }
   to {
     opacity: 1;
@@ -652,12 +656,15 @@ main {
   border-radius: 20px;
   padding: 2rem;
   text-align: left;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
 .testimonial-card:hover {
-  background: rgba(255,255,255,0.05);
-  transform: translateY(-5px);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
 }
 
 .stars {
@@ -733,12 +740,15 @@ main {
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 16px;
   padding: 2rem;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
 }
 
 .faq-item:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .faq-item h3 {
@@ -867,16 +877,17 @@ main {
 
 .cta-btn {
   padding: 1.2rem 3rem;
-  background: #fff;
-  color: #0a0a0a;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
   border: none;
   border-radius: 50px;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
 }
 
 .cta-btn::after {
@@ -884,7 +895,7 @@ main {
   position: absolute;
   right: 2rem;
   opacity: 0;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cta-btn:hover::after {
@@ -893,8 +904,8 @@ main {
 }
 
 .cta-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 40px rgba(255,255,255,0.3);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
   padding-right: 4rem;
 }
 
