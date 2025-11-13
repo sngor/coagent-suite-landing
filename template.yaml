@@ -1,0 +1,132 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: CoAgent Suite Landing Page
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs20.x
+    Architectures:
+      - arm64
+
+Resources:
+  LeadsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'coagent-leads-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+
+  CollectLeadFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: collectLead.handler
+      Environment:
+        Variables:
+          LEADS_BUCKET: !Ref LeadsBucket
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref LeadsBucket
+      Events:
+        CollectLead:
+          Type: Api
+          Properties:
+            Path: /collect-lead
+            Method: post
+            RestApiId: !Ref LeadsApi
+        Options:
+          Type: Api
+          Properties:
+            Path: /collect-lead
+            Method: options
+            RestApiId: !Ref LeadsApi
+
+  LeadsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'POST, OPTIONS'"
+        AllowHeaders: "'Content-Type'"
+        AllowOrigin: "'*'"
+
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'coagent-suite-${AWS::AccountId}'
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebsiteBucket
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: '*'
+            Action: s3:GetObject
+            Resource: !Sub '${WebsiteBucket.Arn}/*'
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt WebsiteBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          Compress: true
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+
+Outputs:
+  WebsiteURL:
+    Description: S3 Website URL
+    Value: !GetAtt WebsiteBucket.WebsiteURL
+  
+  CloudFrontURL:
+    Description: CloudFront Distribution URL
+    Value: !GetAtt CloudFrontDistribution.DomainName
+  
+  BucketName:
+    Description: S3 Bucket Name
+    Value: !Ref WebsiteBucket
+  
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${LeadsApi}.execute-api.${AWS::Region}.amazonaws.com/prod/collect-lead'
+  
+  LeadsBucketName:
+    Description: Leads S3 Bucket Name
+    Value: !Ref LeadsBucket

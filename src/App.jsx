@@ -87,9 +87,15 @@ function App() {
     e.preventDefault()
     setLoading(true)
     try {
-      const leads = JSON.parse(localStorage.getItem('leads') || '[]')
-      leads.push({ email, timestamp: new Date().toISOString() })
-      localStorage.setItem('leads', JSON.stringify(leads))
+      const apiEndpoint = import.meta.env.VITE_API_ENDPOINT || '/api/collect-lead'
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      
+      if (!response.ok) throw new Error('Failed to submit')
+      
       setMessage('✓ Success! You\'re on the waitlist.')
       setEmail('')
     } catch (error) {
