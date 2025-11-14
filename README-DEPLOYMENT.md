@@ -1,4 +1,6 @@
-# CoAgent Suite Landing Page - AWS Deployment
+# AWS Deployment Guide
+
+Deploy your CoAgent Suite waitlist landing page to AWS with serverless architecture.
 
 ## Prerequisites
 
@@ -25,13 +27,15 @@ Run the deployment script:
 ./deploy.sh
 ```
 
-This will:
+This script will:
 1. Install Lambda dependencies
-2. Deploy the SAM template (creates S3 buckets, Lambda, API Gateway, and CloudFront)
+2. Deploy the SAM template (S3 buckets, Lambda, API Gateway, CloudFront)
 3. Configure API endpoint in .env file
 4. Build the React application
-5. Upload the built files to S3
+5. Upload built files to S3
 6. Display your website URLs and API endpoint
+
+**First deployment takes 15-20 minutes** (CloudFront distribution creation).
 
 ### Option 2: Manual Deployment
 
@@ -68,12 +72,12 @@ This will:
 
 ## Accessing Your Website
 
-After deployment, you'll get:
+After deployment, you'll receive:
 
-1. **S3 Website URL** - Direct S3 hosting (HTTP only)
-2. **CloudFront URL** - CDN with HTTPS support (recommended)
-3. **API Endpoint** - For lead collection
-4. **Leads Bucket** - S3 bucket storing leads.csv
+1. **CloudFront URL** - Your production website (HTTPS, recommended)
+2. **S3 Website URL** - Direct S3 hosting (HTTP only, for testing)
+3. **API Endpoint** - Lead collection API
+4. **Leads Bucket** - S3 bucket storing collected emails
 
 View outputs:
 ```bash
@@ -178,11 +182,15 @@ sam delete --stack-name coagent-suite-landing
 
 ## Costs
 
+Estimated monthly costs:
+
 - **S3**: ~$0.023 per GB stored + $0.09 per GB transferred
 - **CloudFront**: First 1TB/month free, then ~$0.085 per GB
 - **Lambda**: 1M requests/month free, then $0.20 per 1M requests
 - **API Gateway**: 1M requests/month free, then $3.50 per 1M requests
-- **Typical landing page with lead collection**: < $2/month for low-medium traffic
+
+**Typical waitlist landing page**: < $2/month for low-medium traffic
+**High traffic (10K+ signups/month)**: $5-15/month
 
 ## Troubleshooting
 

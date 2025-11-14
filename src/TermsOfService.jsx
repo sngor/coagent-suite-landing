@@ -3,7 +3,16 @@ import './Legal.css'
 function TermsOfService() {
   return (
     <div className="legal-page">
+      <nav className="nav">
+        <a href="/" className="logo">
+          <span className="logo-text">CoAgent Suite</span>
+          <span className="logo-pulse"></span>
+        </a>
+      </nav>
+      <div className="bg-gradient-orb orb-1"></div>
+      <div className="bg-gradient-orb orb-2"></div>
       <div className="legal-container">
+        <div className="legal-content">
         <h1>Terms of Service</h1>
         <p className="last-updated">Last Updated: {new Date().toLocaleDateString()}</p>
 
@@ -81,6 +90,7 @@ function TermsOfService() {
         </section>
 
         <a href="/" className="back-link">← Back to Home</a>
+        </div>
       </div>
     </div>
   )

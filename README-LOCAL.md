@@ -1,5 +1,7 @@
 # Local Development Guide
 
+Run the CoAgent Suite landing page locally for development and testing.
+
 ## Quick Start
 
 ### Option 1: One Command (Recommended)
@@ -31,9 +33,16 @@ Open your browser to:
 ## Testing Lead Collection
 
 1. Open http://localhost:5173
-2. Enter an email in the form
-3. Click "Get Early Access"
-4. Check `leads-local.csv` file for collected leads
+2. Enter an email in the waitlist form
+3. Click "Join the Waitlist"
+4. Check `leads-local.csv` file in project root for collected emails
+
+Example `leads-local.csv`:
+```csv
+Email,Timestamp
+"test@example.com","2024-01-15T10:30:00.000Z"
+"another@example.com","2024-01-15T11:45:00.000Z"
+```
 
 ## Local Leads File
 
@@ -46,10 +55,41 @@ Email,Timestamp
 
 ## Development Workflow
 
-1. **Make changes** to `src/App.jsx` or `src/App.css`
-2. **Hot reload** automatically updates the browser
-3. **Test lead collection** with the local API
-4. **View leads** in `leads-local.csv`
+1. **Edit content** in `src/App.jsx` (text, features, testimonials, FAQ)
+2. **Update styles** in `src/App.css` (colors, animations, layout)
+3. **Hot reload** automatically updates the browser
+4. **Test lead collection** by submitting the form
+5. **View collected leads** in `leads-local.csv`
+
+### Making Changes
+
+**Update hero text:**
+```jsx
+// src/App.jsx
+<h1 className="hero-title">
+  Your New Headline Here
+</h1>
+```
+
+**Change colors:**
+```css
+/* src/App.css */
+.hero-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+```
+
+**Add new feature:**
+```jsx
+// src/App.jsx - features array
+{
+  id: 'f5',
+  icon: '🎯',
+  title: 'New Feature',
+  summary: 'Feature description',
+  details: ['Detail 1', 'Detail 2']
+}
+```
 
 ## Stopping the Servers
 
