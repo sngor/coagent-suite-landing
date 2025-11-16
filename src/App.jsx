@@ -10,6 +10,7 @@ function App() {
 
   const [scrollY, setScrollY] = useState(0);
   const [showNavButton, setShowNavButton] = useState(false);
+  const [solutionVisible, setSolutionVisible] = useState(false);
 
   const features = [
     {
@@ -108,9 +109,24 @@ function App() {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setSolutionVisible(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const solutionBox = document.querySelector(".solution-box");
+    if (solutionBox) observer.observe(solutionBox);
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
+      if (solutionBox) observer.unobserve(solutionBox);
     };
   }, []);
 
@@ -284,7 +300,7 @@ function App() {
 
         <section className="ai-trends">
           <div className="trends-container">
-            <div className="solution-box">
+            <div className={`solution-box ${solutionVisible ? "animate-in" : ""}`}>
               <h3 className="solution-title">
                 A Complete Suite of Intelligent Tools for Modern Agents
               </h3>
