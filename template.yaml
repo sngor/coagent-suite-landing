@@ -1,6 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: CoAgent Suite Landing Page
+Description: Bayon Coagent Landing Page
+
+Parameters:
+  GoogleSheetId:
+    Type: String
+    Description: Google Sheet ID for storing leads
+    Default: ""
+  GoogleCredentials:
+    Type: String
+    Description: Google Service Account Credentials JSON (as string)
+    NoEcho: true
+    Default: ""
 
 Globals:
   Function:
@@ -25,6 +36,8 @@ Resources:
       Environment:
         Variables:
           LEADS_BUCKET: !Ref LeadsBucket
+          GOOGLE_SHEET_ID: !Ref GoogleSheetId
+          GOOGLE_CREDENTIALS: !Ref GoogleCredentials
       Policies:
         - S3CrudPolicy:
             BucketName: !Ref LeadsBucket
@@ -63,6 +76,9 @@ Resources:
         BlockPublicPolicy: false
         IgnorePublicAcls: false
         RestrictPublicBuckets: false
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
 
   WebsiteBucketPolicy:
     Type: AWS::S3::BucketPolicy

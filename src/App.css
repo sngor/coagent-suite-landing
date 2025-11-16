@@ -1404,3 +1404,96 @@ main {
     gap: 1rem;
   }
 }
+
+/* Enhanced Animations */
+@keyframes animate-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes animate-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes animate-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-fade-in {
+  animation: animate-fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: animate-slide-up 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+.animate-float {
+  animation: animate-float 6s ease-in-out infinite;
+}
+
+.solution-box {
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.solution-box.animate-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.solution-box.animate-in .solution-item {
+  animation: slide-in-item 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+@keyframes slide-in-item {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.stat {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat:hover {
+  transform: scale(1.1);
+}
+
+.stat-value.active {
+  animation: stat-pop 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes stat-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

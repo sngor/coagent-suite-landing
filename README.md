@@ -1,16 +1,16 @@
-# CoAgent Suite Landing Page
+# Bayon Coagent Landing Page
 
-A modern, high-converting waitlist landing page for CoAgent Suite - an AI-powered platform for real estate agents. Built with React, Vite, and AWS serverless architecture.
+A modern, high-converting waitlist landing page for Bayon Coagent - an AI-powered platform for real estate agents. Built with React, Vite, and AWS serverless architecture with Google Sheets integration.
 
 ## Features
 
 - 🎨 Modern, animated UI with gradient effects and smooth transitions
 - 📧 Email collection with AWS Lambda backend
+- 📊 Google Sheets integration for real-time lead tracking
 - 🚀 Deployed on AWS (S3, CloudFront, API Gateway, Lambda)
 - 📱 Fully responsive design
 - ⚡ Fast loading with Vite
-- 🔒 Privacy Policy and Terms of Service pages
-- 📊 CSV export of collected leads
+- 💾 Dual storage: Google Sheets + S3 backup
 
 ## Tech Stack
 
@@ -25,6 +25,7 @@ A modern, high-converting waitlist landing page for CoAgent Suite - an AI-powere
 - AWS S3 (storage & hosting)
 - AWS CloudFront (CDN)
 - AWS SAM (Infrastructure as Code)
+- Google Sheets API (lead tracking)
 
 ## Quick Start
 
@@ -47,41 +48,32 @@ Visit http://localhost:5173
 ### Deploy to AWS
 
 ```bash
-# One-command deployment
-./deploy.sh
-
-# Or manual deployment
-sam deploy --guided
-npm run build
-aws s3 sync dist/ s3://YOUR-BUCKET-NAME/
+# Automated deployment with Google Sheets
+./final-deploy.sh
 ```
+
+See [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md) for detailed instructions.
 
 ## Project Structure
 
 ```
-coagent-suite-landing/
+bayon-coagent-landing/
 ├── src/
 │   ├── App.jsx              # Main application component
 │   ├── App.css              # Styles and animations
-│   ├── main.jsx             # Entry point with routing
-│   ├── PrivacyPolicy.jsx    # Privacy policy page
-│   ├── TermsOfService.jsx   # Terms of service page
-│   └── Legal.css            # Legal pages styles
+│   └── main.jsx             # Entry point
 ├── lambda/
-│   ├── collectLead.js       # Lambda function for lead collection
-│   └── package.json         # Lambda dependencies
+│   ├── collectLead.js       # Lambda with Google Sheets integration
+│   └── package.json         # Lambda dependencies (googleapis)
 ├── template.yaml            # AWS SAM template
-├── deploy.sh                # Automated deployment script
-├── start-local.sh           # Local development script
-├── download-leads.sh        # Download leads from S3
-└── local-api.js             # Local API server for development
-
+├── final-deploy.sh          # Automated deployment script
+├── deploy-config.sh         # Google Sheets credentials (gitignored)
+└── DEPLOYMENT-GUIDE.md      # Detailed deployment instructions
 ```
 
 ## Documentation
 
-- **[Local Development Guide](README-LOCAL.md)** - Run the app locally
-- **[Deployment Guide](README-DEPLOYMENT.md)** - Deploy to AWS
+- **[Deployment Guide](DEPLOYMENT-GUIDE.md)** - Complete deployment instructions with Google Sheets setup
 
 ## Key Features
 
@@ -94,7 +86,8 @@ coagent-suite-landing/
 
 ### Lead Collection
 - Serverless API with AWS Lambda
-- Stores leads in S3 as CSV
+- Real-time sync to Google Sheets
+- S3 backup as CSV
 - Email validation
 - Success/error feedback
 
@@ -121,26 +114,20 @@ Production uses AWS API Gateway endpoint (auto-configured by deploy script).
 npm run dev          # Start development server
 npm run build        # Build for production
 npm run preview      # Preview production build
-./start-local.sh     # Start local dev environment
-./deploy.sh          # Deploy to AWS
-./download-leads.sh  # Download leads CSV from S3
+./final-deploy.sh    # Deploy to AWS with Google Sheets
 ```
 
 ## Managing Leads
 
-Leads are stored in S3 as `leads.csv`:
+### Google Sheets (Primary)
+Leads are automatically sent to your Google Sheet in real-time:
+- Column A: Email
+- Column B: Timestamp
 
-```csv
-Email,Timestamp
-"user@example.com","2024-01-15T10:30:00.000Z"
-```
+Access your sheet directly to view, export, or analyze leads.
 
-Download leads:
-```bash
-./download-leads.sh
-```
-
-Or manually:
+### S3 Backup
+Leads are also stored in S3 as `leads.csv`:
 ```bash
 aws s3 cp s3://coagent-leads-YOUR-ACCOUNT-ID/leads.csv ./leads.csv
 ```
@@ -203,4 +190,4 @@ Private project - All rights reserved
 
 ## Support
 
-For issues or questions, contact: contact@coagentsuite.com
+For issues or questions, contact: contact@bayoncoagent.com
