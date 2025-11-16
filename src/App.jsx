@@ -11,6 +11,7 @@ function App() {
   const [scrollY, setScrollY] = useState(0);
   const [showNavButton, setShowNavButton] = useState(false);
   const [solutionVisible, setSolutionVisible] = useState(false);
+  const [visibleSections, setVisibleSections] = useState(new Set());
 
   const features = [
     {
@@ -113,19 +114,29 @@ function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setSolutionVisible(true);
+            const id = entry.target.dataset.section;
+            if (id) {
+              setVisibleSections((prev) => new Set([...prev, id]));
+            }
+            if (entry.target.classList.contains("solution-box")) {
+              setSolutionVisible(true);
+            }
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.15, rootMargin: "-50px" }
     );
 
+    const sections = document.querySelectorAll("[data-section]");
+    sections.forEach((section) => observer.observe(section));
     const solutionBox = document.querySelector(".solution-box");
     if (solutionBox) observer.observe(solutionBox);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
+      const sections = document.querySelectorAll("[data-section]");
+      sections.forEach((section) => observer.unobserve(section));
       if (solutionBox) observer.unobserve(solutionBox);
     };
   }, []);
@@ -140,23 +151,28 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
-      const response = await fetch(`https://script.google.com/macros/s/AKfycbxGcVtbkimhtwUo6Au2c7tMKpGhg1J-SCFle9DhEBnPeAOAsFbvnThhLDehtu05tij2/exec?email=${encodeURIComponent(email)}`, {
-        method: 'GET',
-        redirect: 'follow'
-      });
-      
+      const response = await fetch(
+        `https://script.google.com/macros/s/AKfycbxGcVtbkimhtwUo6Au2c7tMKpGhg1J-SCFle9DhEBnPeAOAsFbvnThhLDehtu05tij2/exec?email=${encodeURIComponent(
+          email
+        )}`,
+        {
+          method: "GET",
+          redirect: "follow",
+        }
+      );
+
       const result = await response.json();
-      
+
       if (result.success) {
-        setMessage("✓ Success! You're on the waitlist and will get early access.");
+        setMessage("success");
         setEmail("");
       } else {
-        throw new Error('Failed to submit');
+        throw new Error("Failed to submit");
       }
     } catch (error) {
-      setMessage("❌ Error. Please try again.");
+      setMessage("error");
     } finally {
       setTimeout(() => {
         setLoading(false);
@@ -187,43 +203,52 @@ function App() {
         style={{ left: mousePos.x, top: mousePos.y }}
       />
 
-      <nav className="nav">
+      <nav className="nav" role="navigation" aria-label="Main navigation">
         <div className="logo">
-          <span className="logo-text">CoAgent Suite</span>
-          <span className="logo-pulse"></span>
+          <span className="logo-text">Bayon CoAgent</span>
+          <span className="logo-pulse" aria-hidden="true"></span>
         </div>
         <button
           className={`nav-btn ${showNavButton ? "visible" : ""}`}
           onClick={scrollToForm}
+          aria-label="Join waitlist"
         >
           Join Waitlist
         </button>
       </nav>
 
       <main>
-        <section className="hero">
-          <div className="hero-badge">
+        <section
+          className="hero"
+          data-section="hero"
+          aria-labelledby="hero-title"
+        >
+          <div className="hero-badge" role="status">
             ✨ Launching Early 2026 • Waitlist Gets Early Access
           </div>
-          <div className="cube-container">
+          <div className="cube-container" aria-hidden="true">
             <div className="cube-3d">
-              <div className="cube-face front">🎨</div>
-              <div className="cube-face back">🔍</div>
-              <div className="cube-face right">📈</div>
-              <div className="cube-face left">💬</div>
-              <div className="cube-face top">🤖</div>
-              <div className="cube-face bottom">✨</div>
+              <div className="cube-face front"></div>
+              <div className="cube-face back"></div>
+              <div className="cube-face right"></div>
+              <div className="cube-face left"></div>
+              <div className="cube-face top"></div>
+              <div className="cube-face bottom"></div>
             </div>
           </div>
-          <h1 className="hero-title">
+          <h1 className="hero-title" id="hero-title">
             Your Clients Are Already Using AI—Are You?
           </h1>
           <p className="hero-subtitle">
-            Millions of homebuyers are asking ChatGPT and Perplexity for agent
-            recommendations. CoAgent Suite ensures you show up first with
+            Millions of homebuyers are asking ChatGPT and other AI Platforms for
+            agent recommendations. Bayon CoAgent ensures you show up first with
             intelligent brand building and lead generation tools.
           </p>
-          <form onSubmit={handleSubmit} className="hero-form">
+          <form
+            onSubmit={handleSubmit}
+            className="hero-form"
+            aria-label="Waitlist signup form"
+          >
             <input
               type="email"
               value={email}
@@ -231,6 +256,8 @@ function App() {
               placeholder="Enter your email"
               required
               className="hero-input"
+              aria-label="Email address"
+              autoComplete="email"
             />
             <button
               type="submit"
@@ -247,8 +274,29 @@ function App() {
               )}
             </button>
           </form>
-          {message && <p className="success-msg">{message}</p>}
-          <div className="hero-stats">
+          {message && (
+            <div
+              className={`message-box ${message}`}
+              role="alert"
+              aria-live="polite"
+            >
+              <div className="message-content">
+                <div className="message-title">
+                  {message === "success" ? "You're on the list!" : "Oops!"}
+                </div>
+                <div className="message-text">
+                  {message === "success"
+                    ? "Check your email for early access details."
+                    : "Something went wrong. Please try again."}
+                </div>
+              </div>
+            </div>
+          )}
+          <div
+            className={`hero-stats ${
+              visibleSections.has("hero") ? "animate-in" : ""
+            }`}
+          >
             <div
               className="stat"
               onMouseEnter={() => setActiveCard("stat1")}
@@ -289,7 +337,7 @@ function App() {
                   activeCard === "stat3" ? "active" : ""
                 }`}
               >
-                0%
+                &lt;1%
               </div>
               <div className="stat-label">
                 of agents are optimized for AI discovery
@@ -298,14 +346,21 @@ function App() {
           </div>
         </section>
 
-        <section className="ai-trends">
+        <section
+          className="ai-trends"
+          data-section="trends"
+          aria-labelledby="solution-title"
+        >
           <div className="trends-container">
-            <div className={`solution-box ${solutionVisible ? "animate-in" : ""}`}>
-              <h3 className="solution-title">
+            <div
+              className={`solution-box ${solutionVisible ? "animate-in" : ""}`}
+            >
+              <div className="solution-glow"></div>
+              <h3 className="solution-title" id="solution-title">
                 A Complete Suite of Intelligent Tools for Modern Agents
               </h3>
               <p className="solution-text">
-                CoAgent Suite combines powerful intelligent tools for your brand
+                Bayon CoAgent combines powerful intelligent tools for your brand
                 building and lead generation. From market research to discovery
                 optimization, every tool works together to help you build a
                 strong brand and attract qualified leads
@@ -333,11 +388,11 @@ function App() {
         </section>
       </main>
 
-      <footer className="footer">
+      <footer className="footer" role="contentinfo">
         <div className="footer-content">
           <div className="footer-brand">
             <div className="footer-logo">
-              <span className="logo-text">CoAgent Suite</span>
+              <span className="logo-text">Bayon CoAgent</span>
               <span className="logo-pulse"></span>
             </div>
             <p className="footer-tagline">
@@ -353,7 +408,7 @@ function App() {
         </div>
         <div className="footer-bottom">
           <p>
-            © {new Date().getFullYear()} CoAgent Suite. All rights reserved.
+            © {new Date().getFullYear()} Bayon CoAgent. All rights reserved.
           </p>
         </div>
       </footer>
