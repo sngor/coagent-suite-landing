@@ -10,7 +10,6 @@ function App() {
 
   const [scrollY, setScrollY] = useState(0);
   const [showNavButton, setShowNavButton] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
 
   const features = [
     {
@@ -105,16 +104,9 @@ function App() {
     const handleScroll = () => {
       setScrollY(window.scrollY);
       setShowNavButton(window.scrollY > 600);
-      
-      const solutionBox = document.querySelector('.solution-box');
-      if (solutionBox) {
-        const rect = solutionBox.getBoundingClientRect();
-        setIsVisible(rect.top < window.innerHeight * 0.8);
-      }
     };
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
@@ -132,21 +124,21 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
-      const apiEndpoint =
-        import.meta.env.VITE_API_ENDPOINT || "/api/collect-lead";
-      const response = await fetch(apiEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      const response = await fetch(`https://script.google.com/macros/s/AKfycbxGcVtbkimhtwUo6Au2c7tMKpGhg1J-SCFle9DhEBnPeAOAsFbvnThhLDehtu05tij2/exec?email=${encodeURIComponent(email)}`, {
+        method: 'GET',
+        redirect: 'follow'
       });
-
-      if (!response.ok) throw new Error("Failed to submit");
-
-      setMessage(
-        "✓ Success! You're on the waitlist and will get early access."
-      );
-      setEmail("");
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setMessage("✓ Success! You're on the waitlist and will get early access.");
+        setEmail("");
+      } else {
+        throw new Error('Failed to submit');
+      }
     } catch (error) {
       setMessage("❌ Error. Please try again.");
     } finally {
@@ -181,7 +173,7 @@ function App() {
 
       <nav className="nav">
         <div className="logo">
-          <span className="logo-text">Bayon Coagent</span>
+          <span className="logo-text">CoAgent Suite</span>
           <span className="logo-pulse"></span>
         </div>
         <button
@@ -194,10 +186,10 @@ function App() {
 
       <main>
         <section className="hero">
-          <div className="hero-badge animate-fade-in">
+          <div className="hero-badge">
             ✨ Launching Early 2026 • Waitlist Gets Early Access
           </div>
-          <div className="cube-container animate-float">
+          <div className="cube-container">
             <div className="cube-3d">
               <div className="cube-face front">🎨</div>
               <div className="cube-face back">🔍</div>
@@ -207,15 +199,15 @@ function App() {
               <div className="cube-face bottom">✨</div>
             </div>
           </div>
-          <h1 className="hero-title animate-slide-up">
+          <h1 className="hero-title">
             Your Clients Are Already Using AI—Are You?
           </h1>
-          <p className="hero-subtitle animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <p className="hero-subtitle">
             Millions of homebuyers are asking ChatGPT and Perplexity for agent
-            recommendations. Bayon Coagent ensures you show up first with
+            recommendations. CoAgent Suite ensures you show up first with
             intelligent brand building and lead generation tools.
           </p>
-          <form onSubmit={handleSubmit} className="hero-form animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <form onSubmit={handleSubmit} className="hero-form">
             <input
               type="email"
               value={email}
@@ -240,7 +232,7 @@ function App() {
             </button>
           </form>
           {message && <p className="success-msg">{message}</p>}
-          <div className="hero-stats animate-slide-up" style={{ animationDelay: '0.6s' }}>
+          <div className="hero-stats">
             <div
               className="stat"
               onMouseEnter={() => setActiveCard("stat1")}
@@ -292,29 +284,33 @@ function App() {
 
         <section className="ai-trends">
           <div className="trends-container">
-            <div className={`solution-box ${isVisible ? 'animate-in' : ''}`}>
+            <div className="solution-box">
               <h3 className="solution-title">
                 A Complete Suite of Intelligent Tools for Modern Agents
               </h3>
               <p className="solution-text">
-                Bayon Coagent combines powerful intelligent tools for your brand
+                CoAgent Suite combines powerful intelligent tools for your brand
                 building and lead generation. From market research to discovery
                 optimization, every tool works together to help you build a
                 strong brand and attract qualified leads
               </p>
               <div className="solution-features">
-                {[
-                  '✓ Intelligent market research & brand positioning tools',
-                  '✓ Brand toolkit builder for consistent presence',
-                  '✓ Discovery optimization for ChatGPT & other AI platforms',
-                  '✓ Intelligent lead generation across all channels',
-                  '✓ Client engagement tools',
-                  '✓ Performance tracking & optimization dashboard'
-                ].map((item, index) => (
-                  <div key={index} className="solution-item" style={{ animationDelay: `${index * 0.1}s` }}>
-                    {item}
-                  </div>
-                ))}
+                <div className="solution-item">
+                  ✓ Intelligent market research & brand positioning tools
+                </div>
+                <div className="solution-item">
+                  ✓ Brand toolkit builder for consistent presence
+                </div>
+                <div className="solution-item">
+                  ✓ Discovery optimization for ChatGPT & other AI platforms
+                </div>
+                <div className="solution-item">
+                  ✓ Intelligent lead generation across all channels
+                </div>
+                <div className="solution-item">✓ Client engagement tools</div>
+                <div className="solution-item">
+                  ✓ Performance tracking & optimization dashboard
+                </div>
               </div>
             </div>
           </div>
@@ -325,7 +321,7 @@ function App() {
         <div className="footer-content">
           <div className="footer-brand">
             <div className="footer-logo">
-              <span className="logo-text">Bayon Coagent</span>
+              <span className="logo-text">CoAgent Suite</span>
               <span className="logo-pulse"></span>
             </div>
             <p className="footer-tagline">
@@ -336,12 +332,12 @@ function App() {
           <div className="footer-links">
             <a href="/privacy">Privacy Policy</a>
             <a href="/terms">Terms of Service</a>
-            <a href="mailto:contact@bayoncoagent.com">Contact</a>
+            <a href="mailto:contact@coagentsuite.com">Contact</a>
           </div>
         </div>
         <div className="footer-bottom">
           <p>
-            © {new Date().getFullYear()} Bayon Coagent. All rights reserved.
+            © {new Date().getFullYear()} CoAgent Suite. All rights reserved.
           </p>
         </div>
       </footer>

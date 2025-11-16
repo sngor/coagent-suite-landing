@@ -6,12 +6,12 @@ Parameters:
   GoogleSheetId:
     Type: String
     Description: Google Sheet ID for storing leads
-    Default: ""
+    Default: "NONE"
   GoogleCredentials:
     Type: String
     Description: Google Service Account Credentials JSON (as string)
     NoEcho: true
-    Default: ""
+    Default: "NONE"
 
 Globals:
   Function:
@@ -24,7 +24,7 @@ Resources:
   LeadsBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'coagent-leads-${AWS::AccountId}'
+      BucketName: !Sub 'bayon-coagent-leads-${AWS::AccountId}'
       VersioningConfiguration:
         Status: Enabled
 
@@ -67,7 +67,7 @@ Resources:
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub 'coagent-suite-${AWS::AccountId}'
+      BucketName: !Sub 'bayon-coagent-site-${AWS::AccountId}'
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: index.html
